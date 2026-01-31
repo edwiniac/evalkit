@@ -1,0 +1,27 @@
+[
+    {
+        "input": "What is the capital of France?",
+        "expected_output": "Paris",
+        "metadata": {"category": "geography", "difficulty": "easy"}
+    },
+    {
+        "input": "What is the capital of Japan?",
+        "expected_output": "Tokyo",
+        "metadata": {"category": "geography", "difficulty": "easy"}
+    },
+    {
+        "input": "What is the capital of Germany?",
+        "expected_output": "Berlin",
+        "metadata": {"category": "geography", "difficulty": "easy"}
+    },
+    {
+        "input": "What is the capital of Australia?",
+        "expected_output": "Canberra",
+        "metadata": {"category": "geography", "difficulty": "medium"}
+    },
+    {
+        "input": "What is the capital of Brazil?",
+        "expected_output": "Brasilia",
+        "metadata": {"category": "geography", "difficulty": "medium"}
+    }
+]

@@ -1,0 +1,17 @@
+[
+    {
+        "input": "What programming language was created by Guido van Rossum?",
+        "expected_output": "Python",
+        "context": "Python is a high-level, general-purpose programming language. Its design philosophy emphasizes code readability. It was created by Guido van Rossum and first released in 1991."
+    },
+    {
+        "input": "When was Python first released?",
+        "expected_output": "1991",
+        "context": "Python is a high-level, general-purpose programming language. Its design philosophy emphasizes code readability. It was created by Guido van Rossum and first released in 1991."
+    },
+    {
+        "input": "What does Python emphasize in its design?",
+        "expected_output": "Code readability",
+        "context": "Python is a high-level, general-purpose programming language. Its design philosophy emphasizes code readability. It was created by Guido van Rossum and first released in 1991."
+    }
+]

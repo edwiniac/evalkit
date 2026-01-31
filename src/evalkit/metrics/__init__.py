@@ -20,6 +20,13 @@ from .llm_judge import (
     LLMJudgeMetric,
     Toxicity,
 )
+from .statistical import (
+    BLEUScore,
+    CostMetric,
+    LatencyMetric,
+    ROUGEScore,
+    SemanticSimilarity,
+)
 
 __all__ = [
     "EvalMetric",
@@ -38,4 +45,10 @@ __all__ = [
     "Coherence",
     "Toxicity",
     "Correctness",
+    # Statistical
+    "BLEUScore",
+    "ROUGEScore",
+    "SemanticSimilarity",
+    "LatencyMetric",
+    "CostMetric",
 ]
