@@ -220,4 +220,4 @@ MIT License — see [LICENSE](LICENSE) for details.
 ## 👤 Author
 
 **Edwin Isac** — AI Engineer  
-[GitHub](https://github.com/edwinisac) · [Email](mailto:edwinisac007@gmail.com)
+[GitHub](https://github.com/edwiniac) · [Email](mailto:edwinisac007@gmail.com)
