@@ -1,5 +1,9 @@
 # 📊 EvalKit
 
+[![CI](https://github.com/edwiniac/evalkit/actions/workflows/ci.yml/badge.svg)](https://github.com/edwiniac/evalkit/actions/workflows/ci.yml)
+[![Python 3.10+](https://img.shields.io/badge/python-3.10%2B-blue.svg)](https://www.python.org/downloads/)
+[![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](https://opensource.org/licenses/MIT)
+
 **Production-grade LLM evaluation framework** — test hallucination, factuality, relevance, and more.
 
 Built for AI engineers who need rigorous, reproducible evaluation of language model outputs.
