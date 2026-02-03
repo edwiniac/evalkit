@@ -4,7 +4,7 @@ Tests for model adapters.
 
 import pytest
 
-from evalkit.adapters import static_model, judge_from_model, _estimate_cost
+from evalkit.adapters import _estimate_cost, judge_from_model, static_model
 from evalkit.models import ModelResponse
 
 

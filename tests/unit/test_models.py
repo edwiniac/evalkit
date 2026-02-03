@@ -126,11 +126,13 @@ class TestEvalSuiteResult:
     def _make_result(self, scores: list[tuple[float, Verdict]]) -> EvalSuiteResult:
         case_results = []
         for score, verdict in scores:
-            case_results.append(CaseResult(
-                case=EvalCase(input="Q"),
-                response=ModelResponse(text="A", model="test", latency_ms=100, cost_usd=0.001),
-                metric_results=[MetricResult("m1", score, verdict)],
-            ))
+            case_results.append(
+                CaseResult(
+                    case=EvalCase(input="Q"),
+                    response=ModelResponse(text="A", model="test", latency_ms=100, cost_usd=0.001),
+                    metric_results=[MetricResult("m1", score, verdict)],
+                )
+            )
         return EvalSuiteResult(
             suite_name="Test",
             model="test",

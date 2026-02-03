@@ -12,7 +12,7 @@ import asyncio
 import logging
 import time
 from datetime import datetime
-from typing import Callable, Optional, Awaitable
+from typing import Awaitable, Callable, Optional
 
 from ..metrics.base import EvalMetric
 from ..models import (
@@ -34,7 +34,7 @@ ModelFn = Callable[[str], Awaitable[ModelResponse]]
 class EvalRunner:
     """
     Runs evaluation suites against model functions.
-    
+
     Usage:
         runner = EvalRunner()
         result = await runner.run(suite, model_fn, model_name="gpt-4")
@@ -61,18 +61,21 @@ class EvalRunner:
     ) -> EvalSuiteResult:
         """
         Run a full evaluation suite.
-        
+
         Args:
             suite: The evaluation suite to run.
             model_fn: Async callable that takes input string → ModelResponse.
             model_name: Name identifier for the model.
-            
+
         Returns:
             EvalSuiteResult with all case results and aggregates.
         """
         logger.info(
             "Starting eval: '%s' (%d cases, %d metrics, model=%s)",
-            suite.name, len(suite.cases), len(suite.metrics), model_name,
+            suite.name,
+            len(suite.cases),
+            len(suite.metrics),
+            model_name,
         )
 
         result = EvalSuiteResult(
@@ -92,7 +95,8 @@ class EvalRunner:
 
                 logger.debug(
                     "Case %d/%d: %s (%.2f)",
-                    i + 1, len(suite.cases),
+                    i + 1,
+                    len(suite.cases),
                     "PASS" if case_result.passed else "FAIL",
                     case_result.avg_score,
                 )
@@ -108,10 +112,7 @@ class EvalRunner:
                         self._on_case_complete(idx, cr)
                     return idx, cr
 
-            tasks = [
-                bounded_eval(i, case)
-                for i, case in enumerate(suite.cases)
-            ]
+            tasks = [bounded_eval(i, case) for i, case in enumerate(suite.cases)]
             results = await asyncio.gather(*tasks, return_exceptions=True)
 
             # Sort by index to maintain order
@@ -141,11 +142,11 @@ class EvalRunner:
     ) -> dict[str, EvalSuiteResult]:
         """
         Run a suite against multiple models for comparison.
-        
+
         Args:
             suite: The evaluation suite.
             models: Dict of {model_name: model_fn}.
-            
+
         Returns:
             Dict of {model_name: EvalSuiteResult}.
         """
@@ -184,14 +185,18 @@ class EvalRunner:
             except Exception as e:
                 logger.warning(
                     "Metric '%s' failed for case %s: %s",
-                    metric.name, case.case_id, e,
+                    metric.name,
+                    case.case_id,
+                    e,
                 )
-                metric_results.append(MetricResult(
-                    metric_name=metric.name,
-                    score=0.0,
-                    verdict=Verdict.ERROR,
-                    reason=f"Metric error: {e}",
-                ))
+                metric_results.append(
+                    MetricResult(
+                        metric_name=metric.name,
+                        score=0.0,
+                        verdict=Verdict.ERROR,
+                        reason=f"Metric error: {e}",
+                    )
+                )
 
         return CaseResult(
             case=case,

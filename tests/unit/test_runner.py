@@ -9,8 +9,8 @@ from evalkit.models import EvalCase, EvalSuiteResult, ModelResponse, Verdict
 from evalkit.runners.runner import EvalRunner
 from evalkit.suite import EvalSuite
 
-
 # ── Helpers ───────────────────────────────────────────────────────────
+
 
 async def mock_model(input: str) -> ModelResponse:
     """Simple mock model that echoes a fixed answer."""
@@ -35,7 +35,8 @@ async def failing_model(input: str) -> ModelResponse:
 def make_suite(cases=None, metrics=None) -> EvalSuite:
     return EvalSuite(
         name="Test Suite",
-        cases=cases or [
+        cases=cases
+        or [
             EvalCase(input="What is 2+2?", expected_output="4"),
             EvalCase(input="Capital of France?", expected_output="Paris"),
         ],
@@ -44,6 +45,7 @@ def make_suite(cases=None, metrics=None) -> EvalSuite:
 
 
 # ── Basic Running ────────────────────────────────────────────────────
+
 
 class TestBasicRunner:
     @pytest.mark.asyncio
@@ -86,6 +88,7 @@ class TestBasicRunner:
 
 # ── Multiple Metrics ─────────────────────────────────────────────────
 
+
 class TestMultipleMetrics:
     @pytest.mark.asyncio
     async def test_two_metrics(self):
@@ -116,6 +119,7 @@ class TestMultipleMetrics:
 
 # ── Error Handling ───────────────────────────────────────────────────
 
+
 class TestErrorHandling:
     @pytest.mark.asyncio
     async def test_model_error_handled(self):
@@ -143,6 +147,7 @@ class TestErrorHandling:
 
 # ── Concurrent Execution ─────────────────────────────────────────────
 
+
 class TestConcurrency:
     @pytest.mark.asyncio
     async def test_concurrent_run(self):
@@ -160,6 +165,7 @@ class TestConcurrency:
 
 
 # ── Model Comparison ─────────────────────────────────────────────────
+
 
 class TestComparison:
     @pytest.mark.asyncio
@@ -183,6 +189,7 @@ class TestComparison:
 
 # ── Callbacks ────────────────────────────────────────────────────────
 
+
 class TestCallbacks:
     @pytest.mark.asyncio
     async def test_on_case_complete(self):
@@ -198,6 +205,7 @@ class TestCallbacks:
 
 
 # ── Metadata ─────────────────────────────────────────────────────────
+
 
 class TestRunMetadata:
     @pytest.mark.asyncio

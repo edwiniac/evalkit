@@ -25,6 +25,7 @@ def make_response(text: str) -> ModelResponse:
 
 # ── ExactMatch ───────────────────────────────────────────────────────
 
+
 class TestExactMatch:
     @pytest.mark.asyncio
     async def test_exact_match(self):
@@ -73,6 +74,7 @@ class TestExactMatch:
 
 # ── ContainsAny ──────────────────────────────────────────────────────
 
+
 class TestContainsAny:
     @pytest.mark.asyncio
     async def test_contains_keyword(self):
@@ -115,6 +117,7 @@ class TestContainsAny:
 
 # ── ContainsAll ──────────────────────────────────────────────────────
 
+
 class TestContainsAll:
     @pytest.mark.asyncio
     async def test_all_present(self):
@@ -143,6 +146,7 @@ class TestContainsAll:
 
 
 # ── RegexMatch ───────────────────────────────────────────────────────
+
 
 class TestRegexMatch:
     @pytest.mark.asyncio
@@ -185,6 +189,7 @@ class TestRegexMatch:
 
 # ── IsJSON ───────────────────────────────────────────────────────────
 
+
 class TestIsJSON:
     @pytest.mark.asyncio
     async def test_valid_json(self):
@@ -220,11 +225,12 @@ class TestIsJSON:
     @pytest.mark.asyncio
     async def test_json_array(self):
         m = IsJSON(required_keys=["name"])
-        r = await m.score(make_case(), make_response('[1, 2, 3]'))
+        r = await m.score(make_case(), make_response("[1, 2, 3]"))
         assert r.score == 0.5  # Valid JSON but not an object
 
 
 # ── LengthRange ──────────────────────────────────────────────────────
+
 
 class TestLengthRange:
     @pytest.mark.asyncio

@@ -10,9 +10,9 @@ import json
 import logging
 from typing import Any, Awaitable, Callable, Optional
 
-from ..models import EvalCase, MetricResult, ModelResponse, Verdict
-from .base import EvalMetric
+from ..models import EvalCase, MetricResult, ModelResponse
 from . import judge_prompts
+from .base import EvalMetric
 
 logger = logging.getLogger(__name__)
 
@@ -23,7 +23,7 @@ JudgeFn = Callable[[str], Awaitable[str]]
 class LLMJudgeMetric(EvalMetric):
     """
     Base class for LLM-as-Judge metrics.
-    
+
     Subclasses define the prompt template and parse the response.
     The judge function is injected — can be any LLM provider.
     """
@@ -89,10 +89,7 @@ class LLMJudgeMetric(EvalMetric):
             reason = parsed.get("reason", "")
 
             # Extract additional metadata
-            metadata = {
-                k: v for k, v in parsed.items()
-                if k not in ("score", "verdict", "reason")
-            }
+            metadata = {k: v for k, v in parsed.items() if k not in ("score", "verdict", "reason")}
 
             return self._make_result(
                 score=score,
@@ -108,7 +105,7 @@ class LLMJudgeMetric(EvalMetric):
 class Faithfulness(LLMJudgeMetric):
     """
     Evaluates if the response is grounded in the provided context.
-    
+
     High score = response only contains claims supported by the context.
     Requires: case.context to be set.
     """
@@ -133,7 +130,7 @@ class Faithfulness(LLMJudgeMetric):
 class AnswerRelevance(LLMJudgeMetric):
     """
     Evaluates if the response is relevant to the question asked.
-    
+
     High score = response directly addresses the question.
     """
 
@@ -149,7 +146,7 @@ class AnswerRelevance(LLMJudgeMetric):
 class Hallucination(LLMJudgeMetric):
     """
     Detects hallucinations (fabricated information) in the response.
-    
+
     High score = fewer hallucinations (good).
     """
 
@@ -165,7 +162,7 @@ class Hallucination(LLMJudgeMetric):
 class Coherence(LLMJudgeMetric):
     """
     Evaluates structural quality and logical flow of the response.
-    
+
     High score = well-organized, easy to follow.
     """
 
@@ -181,7 +178,7 @@ class Coherence(LLMJudgeMetric):
 class Toxicity(LLMJudgeMetric):
     """
     Detects toxic, harmful, or inappropriate content.
-    
+
     High score = safe content (good).
     """
 
@@ -197,7 +194,7 @@ class Toxicity(LLMJudgeMetric):
 class Correctness(LLMJudgeMetric):
     """
     Evaluates factual correctness against expected answer.
-    
+
     High score = factually correct.
     """
 

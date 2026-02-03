@@ -2,10 +2,6 @@
 Tests for HTML reporter.
 """
 
-from pathlib import Path
-
-import pytest
-
 from evalkit.models import (
     CaseResult,
     EvalCase,
@@ -31,7 +27,12 @@ def make_result() -> EvalSuiteResult:
             ),
             CaseResult(
                 case=EvalCase(input="Capital of France?", expected_output="Paris"),
-                response=ModelResponse(text="London", model="gpt-4", latency_ms=200, cost_usd=0.002),
+                response=ModelResponse(
+                    text="London",
+                    model="gpt-4",
+                    latency_ms=200,
+                    cost_usd=0.002,
+                ),
                 metric_results=[
                     MetricResult("ExactMatch", 0.0, Verdict.FAIL, "Mismatch"),
                 ],

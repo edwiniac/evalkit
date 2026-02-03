@@ -38,25 +38,27 @@ def load_cases_jsonl(path: Path) -> list[EvalCase]:
 def load_cases_csv(path: Path) -> list[EvalCase]:
     """
     Load cases from a CSV file.
-    
+
     Expected columns: input, expected_output, context (optional).
     """
     cases = []
     with open(path) as f:
         reader = csv.DictReader(f)
         for row in reader:
-            cases.append(EvalCase(
-                input=row.get("input", ""),
-                expected_output=row.get("expected_output") or row.get("expected") or None,
-                context=row.get("context") or None,
-            ))
+            cases.append(
+                EvalCase(
+                    input=row.get("input", ""),
+                    expected_output=row.get("expected_output") or row.get("expected") or None,
+                    context=row.get("context") or None,
+                )
+            )
     return cases
 
 
 def load_cases(path: str | Path) -> list[EvalCase]:
     """
     Auto-detect format and load cases.
-    
+
     Supports: .json, .jsonl, .csv
     """
     path = Path(path)
@@ -79,7 +81,7 @@ def load_suite(
 ) -> EvalSuite:
     """
     Load a suite from a data file.
-    
+
     Args:
         path: Path to dataset file.
         name: Suite name (defaults to filename).

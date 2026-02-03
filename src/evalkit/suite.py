@@ -8,7 +8,6 @@ The runner handles actually executing it against models.
 from __future__ import annotations
 
 from dataclasses import dataclass, field
-from typing import Optional
 
 from .metrics.base import EvalMetric
 from .models import EvalCase
@@ -18,7 +17,7 @@ from .models import EvalCase
 class EvalSuite:
     """
     A named collection of evaluation cases and metrics.
-    
+
     Usage:
         suite = EvalSuite(
             name="RAG Quality",
@@ -28,6 +27,7 @@ class EvalSuite:
             metrics=[ExactMatch(), ContainsAny(keywords=["Y"])],
         )
     """
+
     name: str
     cases: list[EvalCase] = field(default_factory=list)
     metrics: list[EvalMetric] = field(default_factory=list)

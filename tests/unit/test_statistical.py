@@ -24,6 +24,7 @@ def make_response(text: str, latency_ms: float = 100, cost_usd: float = 0.001) -
 
 # ── BLEU Score ───────────────────────────────────────────────────────
 
+
 class TestBLEUScore:
     @pytest.mark.asyncio
     async def test_identical_text(self):
@@ -62,6 +63,7 @@ class TestBLEUScore:
 
 # ── ROUGE Score ──────────────────────────────────────────────────────
 
+
 class TestROUGEScore:
     @pytest.mark.asyncio
     async def test_identical_text(self):
@@ -99,6 +101,7 @@ class TestROUGEScore:
 
 
 # ── Semantic Similarity (Jaccard fallback) ────────────────────────────
+
 
 class TestSemanticSimilarity:
     @pytest.mark.asyncio
@@ -145,6 +148,7 @@ class TestSemanticSimilarity:
 
 # ── Latency Metric ───────────────────────────────────────────────────
 
+
 class TestLatencyMetric:
     @pytest.mark.asyncio
     async def test_under_target(self):
@@ -173,6 +177,7 @@ class TestLatencyMetric:
 
 
 # ── Cost Metric ──────────────────────────────────────────────────────
+
 
 class TestCostMetric:
     @pytest.mark.asyncio

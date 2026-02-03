@@ -17,7 +17,7 @@ logger = logging.getLogger(__name__)
 class BLEUScore(EvalMetric):
     """
     BLEU score — measures n-gram overlap with expected output.
-    
+
     Standard MT metric adapted for LLM evaluation.
     Score range: 0.0 (no overlap) to 1.0 (identical).
     """
@@ -30,7 +30,7 @@ class BLEUScore(EvalMetric):
             return self._error_result("No expected_output for BLEU calculation")
 
         try:
-            from nltk.translate.bleu_score import sentence_bleu, SmoothingFunction
+            from nltk.translate.bleu_score import SmoothingFunction, sentence_bleu
         except ImportError:
             return self._error_result("nltk required: pip install nltk")
 
@@ -43,7 +43,8 @@ class BLEUScore(EvalMetric):
         try:
             smoothing = SmoothingFunction().method1
             bleu = sentence_bleu(
-                [reference], hypothesis,
+                [reference],
+                hypothesis,
                 weights=(0.5, 0.5),  # Bigram BLEU
                 smoothing_function=smoothing,
             )
@@ -58,7 +59,7 @@ class BLEUScore(EvalMetric):
 class ROUGEScore(EvalMetric):
     """
     ROUGE-L score — measures longest common subsequence overlap.
-    
+
     Good for summarization evaluation.
     Score range: 0.0 to 1.0.
     """
@@ -93,7 +94,7 @@ class ROUGEScore(EvalMetric):
 class SemanticSimilarity(EvalMetric):
     """
     Semantic similarity — cosine similarity of text embeddings.
-    
+
     Uses sentence-transformers for embedding, falls back to
     simple word overlap if unavailable.
     """
@@ -114,9 +115,7 @@ class SemanticSimilarity(EvalMetric):
 
         # Try sentence-transformers first
         try:
-            similarity = self._embedding_similarity(
-                case.expected_output, response.text
-            )
+            similarity = self._embedding_similarity(case.expected_output, response.text)
             return self._make_result(
                 score=similarity,
                 reason=f"Semantic similarity: {similarity:.4f}",
@@ -126,19 +125,20 @@ class SemanticSimilarity(EvalMetric):
             pass
 
         # Fallback: Jaccard word overlap
-        similarity = self._jaccard_similarity(
-            case.expected_output, response.text
-        )
+        similarity = self._jaccard_similarity(case.expected_output, response.text)
         return self._make_result(
             score=similarity,
-            reason=f"Word overlap similarity: {similarity:.4f} (install sentence-transformers for better results)",
+            reason=(
+                f"Word overlap similarity: {similarity:.4f}"
+                " (install sentence-transformers for better results)"
+            ),
             method="jaccard",
         )
 
     def _embedding_similarity(self, text_a: str, text_b: str) -> float:
         """Compute cosine similarity using sentence-transformers."""
-        from sentence_transformers import SentenceTransformer
         import numpy as np
+        from sentence_transformers import SentenceTransformer
 
         if self._encoder is None:
             self._encoder = SentenceTransformer(self._model_name)
@@ -166,7 +166,7 @@ class SemanticSimilarity(EvalMetric):
 class LatencyMetric(EvalMetric):
     """
     Measures response latency.
-    
+
     Score = 1.0 if under target, degrades as latency increases.
     """
 
@@ -201,7 +201,7 @@ class LatencyMetric(EvalMetric):
 class CostMetric(EvalMetric):
     """
     Measures response cost.
-    
+
     Score = 1.0 if under budget, degrades as cost increases.
     """
 

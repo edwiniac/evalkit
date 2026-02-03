@@ -5,28 +5,26 @@ Tests the full pipeline: define suite → run → report.
 """
 
 import json
-from pathlib import Path
 
 import pytest
 
-from evalkit.adapters import static_model, judge_from_model
+from evalkit.adapters import static_model
 from evalkit.datasets.loader import load_suite
 from evalkit.metrics import (
     BLEUScore,
     ContainsAny,
     ExactMatch,
     Faithfulness,
-    IsJSON,
     LengthRange,
     ROUGEScore,
 )
-from evalkit.models import EvalCase, ModelResponse
+from evalkit.models import EvalCase
 from evalkit.reporters import ConsoleReporter, HTMLReporter, JSONReporter
 from evalkit.runners import EvalRunner
 from evalkit.suite import EvalSuite
 
-
 # ── E2E: Full Pipeline ───────────────────────────────────────────────
+
 
 class TestFullPipeline:
     @pytest.mark.asyncio
@@ -44,11 +42,13 @@ class TestFullPipeline:
         )
 
         # Model
-        model = static_model({
-            "Capital of France?": "Paris",
-            "Capital of Japan?": "Tokyo",
-            "Capital of Germany?": "Munich",  # Wrong!
-        })
+        model = static_model(
+            {
+                "Capital of France?": "Paris",
+                "Capital of Japan?": "Tokyo",
+                "Capital of Germany?": "Munich",  # Wrong!
+            }
+        )
 
         # Run
         runner = EvalRunner()
@@ -80,6 +80,7 @@ class TestFullPipeline:
 
 # ── E2E: Model Comparison ────────────────────────────────────────────
 
+
 class TestModelComparison:
     @pytest.mark.asyncio
     async def test_compare_two_models(self, tmp_path):
@@ -96,9 +97,7 @@ class TestModelComparison:
         bad = static_model({"2+2": "5", "3*3": "10"})
 
         runner = EvalRunner()
-        results = await runner.run_comparison(
-            suite, models={"good": good, "bad": bad}
-        )
+        results = await runner.run_comparison(suite, models={"good": good, "bad": bad})
 
         assert results["good"].pass_rate == 1.0
         assert results["bad"].pass_rate == 0.0
@@ -110,6 +109,7 @@ class TestModelComparison:
 
 
 # ── E2E: Dataset Loading Pipeline ────────────────────────────────────
+
 
 class TestDatasetPipeline:
     @pytest.mark.asyncio
@@ -134,6 +134,7 @@ class TestDatasetPipeline:
 
 
 # ── E2E: Multiple Metrics ────────────────────────────────────────────
+
 
 class TestMultiMetricPipeline:
     @pytest.mark.asyncio
@@ -172,6 +173,7 @@ class TestMultiMetricPipeline:
 
 # ── E2E: LLM-as-Judge Pipeline ───────────────────────────────────────
 
+
 class TestJudgePipeline:
     @pytest.mark.asyncio
     async def test_judge_metric_in_suite(self):
@@ -179,11 +181,13 @@ class TestJudgePipeline:
 
         # Mock judge that always returns high faithfulness
         async def mock_judge(prompt: str) -> str:
-            return json.dumps({
-                "score": 0.95,
-                "verdict": "pass",
-                "reason": "Response is grounded in context",
-            })
+            return json.dumps(
+                {
+                    "score": 0.95,
+                    "verdict": "pass",
+                    "reason": "Response is grounded in context",
+                }
+            )
 
         suite = EvalSuite(
             name="RAG Quality",
@@ -191,7 +195,10 @@ class TestJudgePipeline:
                 EvalCase(
                     input="What is Python?",
                     expected_output="A programming language",
-                    context="Python is a high-level programming language created by Guido van Rossum.",
+                    context=(
+                        "Python is a high-level programming language"
+                        " created by Guido van Rossum."
+                    ),
                 ),
             ],
             metrics=[
@@ -211,6 +218,7 @@ class TestJudgePipeline:
 
 
 # ── E2E: Serialization Roundtrip ─────────────────────────────────────
+
 
 class TestSerializationRoundtrip:
     @pytest.mark.asyncio

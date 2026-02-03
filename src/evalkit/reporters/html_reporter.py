@@ -2,9 +2,7 @@
 HTML reporter — generates interactive HTML evaluation reports.
 """
 
-import json
 from pathlib import Path
-from typing import Optional
 
 from ..models import EvalSuiteResult, Verdict
 
@@ -78,7 +76,9 @@ class HTMLReporter:
     def generate(self, result: EvalSuiteResult) -> str:
         """Generate an HTML report string."""
         pass_rate = f"{result.pass_rate:.0%}"
-        pass_class = "pass" if result.pass_rate >= 0.8 else "warn" if result.pass_rate >= 0.5 else "fail"
+        pass_class = (
+            "pass" if result.pass_rate >= 0.8 else "warn" if result.pass_rate >= 0.5 else "fail"
+        )
 
         metrics_html = self._metrics_section(result)
         cases_html = self._cases_section(result)
@@ -112,13 +112,17 @@ class HTMLReporter:
         rows = []
         for name, stats in summary.items():
             pct = int(stats["avg"] * 100)
-            color = "#22c55e" if stats["avg"] >= 0.7 else "#f59e0b" if stats["avg"] >= 0.5 else "#ef4444"
+            color = (
+                "#22c55e"
+                if stats["avg"] >= 0.7
+                else "#f59e0b" if stats["avg"] >= 0.5 else "#ef4444"
+            )
             rows.append(
                 f'<div class="metric-row">'
                 f'<span class="metric-name">{name}</span>'
                 f'<div class="bar"><div class="bar-fill" style="width:{pct}%;background:{color}"></div></div>'
                 f'<span class="metric-score">{stats["avg"]:.2f}</span>'
-                f'</div>'
+                f"</div>"
             )
         return "\n".join(rows)
 
@@ -139,13 +143,13 @@ class HTMLReporter:
             cards.append(
                 f'<div class="case-card">'
                 f'<div class="case-header">'
-                f'<span>{icon} Case {i+1}</span>'
+                f"<span>{icon} Case {i+1}</span>"
                 f'<span class="{badge_cls}">{cr.avg_score:.2f}</span>'
-                f'</div>'
+                f"</div>"
                 f'<div class="case-input">{input_preview}</div>'
                 f'<div class="case-response">{response_preview}</div>'
                 f'<div style="margin-top:0.5rem;font-size:0.8rem;">{metrics_list}</div>'
-                f'</div>'
+                f"</div>"
             )
         return "\n".join(cards)
 

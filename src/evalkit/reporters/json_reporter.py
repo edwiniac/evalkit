@@ -4,7 +4,6 @@ JSON reporter — machine-readable evaluation results.
 
 import json
 from pathlib import Path
-from typing import Optional
 
 from ..models import EvalSuiteResult
 

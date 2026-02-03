@@ -6,8 +6,8 @@ Each adapter returns an async function compatible with:
 - LLMJudgeMetric's JudgeFn (prompt → str)
 """
 
-import time
 import logging
+import time
 from typing import Optional
 
 from .models import ModelResponse
@@ -35,8 +35,7 @@ def _estimate_cost(model: str, prompt_tokens: int, completion_tokens: int) -> fl
         if key in model_lower:
             prices = PRICING[key]
             return (
-                prompt_tokens / 1000 * prices["input"]
-                + completion_tokens / 1000 * prices["output"]
+                prompt_tokens / 1000 * prices["input"] + completion_tokens / 1000 * prices["output"]
             )
     return 0.0
 
@@ -49,13 +48,14 @@ def openai_model(
 ):
     """
     Create an OpenAI model function.
-    
+
     Returns an async function: input → ModelResponse.
-    
+
     Usage:
         model_fn = openai_model("gpt-4o-mini")
         response = await model_fn("What is 2+2?")
     """
+
     async def call(input_text: str) -> ModelResponse:
         import openai
 
@@ -99,9 +99,10 @@ def anthropic_model(
 ):
     """
     Create an Anthropic model function.
-    
+
     Returns an async function: input → ModelResponse.
     """
+
     async def call(input_text: str) -> ModelResponse:
         import anthropic
 
@@ -143,21 +144,25 @@ def ollama_model(
 ):
     """
     Create an Ollama model function (local).
-    
+
     Returns an async function: input → ModelResponse.
     """
+
     async def call(input_text: str) -> ModelResponse:
         import httpx
 
         async with httpx.AsyncClient(base_url=base_url, timeout=120) as client:
             start = time.monotonic()
 
-            resp = await client.post("/api/generate", json={
-                "model": model,
-                "prompt": input_text,
-                "stream": False,
-                "options": {"temperature": temperature},
-            })
+            resp = await client.post(
+                "/api/generate",
+                json={
+                    "model": model,
+                    "prompt": input_text,
+                    "stream": False,
+                    "options": {"temperature": temperature},
+                },
+            )
             resp.raise_for_status()
             data = resp.json()
 
@@ -181,11 +186,12 @@ def ollama_model(
 def static_model(responses: dict[str, str], default: str = "I don't know"):
     """
     Create a static mock model for testing.
-    
+
     Args:
         responses: Dict of {input: output}.
         default: Default response for unknown inputs.
     """
+
     async def call(input_text: str) -> ModelResponse:
         text = responses.get(input_text, default)
         return ModelResponse(text=text, model="static", token_count=len(text.split()))
@@ -196,9 +202,10 @@ def static_model(responses: dict[str, str], default: str = "I don't know"):
 def judge_from_model(model_fn):
     """
     Convert a model function (input → ModelResponse) into a judge function (prompt → str).
-    
+
     Useful for passing model adapters to LLM-as-Judge metrics.
     """
+
     async def judge(prompt: str) -> str:
         response = await model_fn(prompt)
         return response.text

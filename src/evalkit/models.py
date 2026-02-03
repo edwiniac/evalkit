@@ -6,7 +6,6 @@ Defines the fundamental types: EvalCase, MetricResult, EvalResult, EvalSuiteResu
 
 from __future__ import annotations
 
-import time
 import uuid
 from dataclasses import dataclass, field
 from datetime import datetime
@@ -16,6 +15,7 @@ from typing import Any, Optional
 
 class Verdict(str, Enum):
     """Pass/fail verdict for a metric evaluation."""
+
     PASS = "pass"
     FAIL = "fail"
     ERROR = "error"
@@ -26,7 +26,7 @@ class Verdict(str, Enum):
 class EvalCase:
     """
     A single evaluation test case.
-    
+
     Attributes:
         input: The prompt/question to send to the model.
         expected_output: The ideal/reference answer (optional).
@@ -34,6 +34,7 @@ class EvalCase:
         metadata: Arbitrary tags for filtering/grouping.
         case_id: Unique identifier (auto-generated if not set).
     """
+
     input: str
     expected_output: Optional[str] = None
     context: Optional[str | list[str]] = None
@@ -62,6 +63,7 @@ class EvalCase:
 @dataclass
 class ModelResponse:
     """Response from a model for a given input."""
+
     text: str
     model: str
     latency_ms: float = 0.0
@@ -87,7 +89,7 @@ class ModelResponse:
 class MetricResult:
     """
     Result of a single metric evaluation on one case.
-    
+
     Attributes:
         metric_name: Name of the metric that produced this result.
         score: Numeric score (0.0 to 1.0).
@@ -95,6 +97,7 @@ class MetricResult:
         reason: Human-readable explanation.
         threshold: The threshold used for pass/fail.
     """
+
     metric_name: str
     score: float  # 0.0 to 1.0
     verdict: Verdict = Verdict.PASS
@@ -116,6 +119,7 @@ class MetricResult:
 @dataclass
 class CaseResult:
     """Result of evaluating one case across all metrics."""
+
     case: EvalCase
     response: ModelResponse
     metric_results: list[MetricResult] = field(default_factory=list)
@@ -124,9 +128,7 @@ class CaseResult:
     def passed(self) -> bool:
         """True if all metrics passed."""
         return all(
-            r.verdict == Verdict.PASS
-            for r in self.metric_results
-            if r.verdict != Verdict.SKIP
+            r.verdict == Verdict.PASS for r in self.metric_results if r.verdict != Verdict.SKIP
         )
 
     @property
@@ -148,9 +150,10 @@ class CaseResult:
 class EvalSuiteResult:
     """
     Result of a complete evaluation suite run.
-    
+
     Contains all case results plus aggregate statistics.
     """
+
     suite_name: str
     model: str
     case_results: list[CaseResult] = field(default_factory=list)

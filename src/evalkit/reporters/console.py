@@ -2,8 +2,6 @@
 Console reporter — rich terminal output for evaluation results.
 """
 
-from typing import Optional
-
 from ..models import EvalSuiteResult, Verdict
 
 
@@ -27,7 +25,10 @@ class ConsoleReporter:
 
         # Summary
         pass_icon = "✅" if result.pass_rate >= 0.8 else "⚠️" if result.pass_rate >= 0.5 else "❌"
-        lines.append(f"  {pass_icon} Pass Rate: {result.passed_cases}/{result.total_cases} ({result.pass_rate:.0%})")
+        lines.append(
+            f"  {pass_icon} Pass Rate: {result.passed_cases}"
+            f"/{result.total_cases} ({result.pass_rate:.0%})"
+        )
         lines.append(f"  📊 Avg Score: {result.avg_score:.2f}")
         lines.append(f"  ⏱  Avg Latency: {result.avg_latency_ms:.0f}ms")
         if result.total_cost_usd > 0:
@@ -56,7 +57,11 @@ class ConsoleReporter:
                 input_preview = cr.case.input[:60].replace("\n", " ")
                 lines.append(f"  {icon} Case {i+1}: {input_preview}")
                 for mr in cr.metric_results:
-                    v_icon = "✓" if mr.verdict == Verdict.PASS else "✗" if mr.verdict == Verdict.FAIL else "!"
+                    v_icon = (
+                        "✓"
+                        if mr.verdict == Verdict.PASS
+                        else "✗" if mr.verdict == Verdict.FAIL else "!"
+                    )
                     lines.append(
                         f"     {v_icon} {mr.metric_name}: {mr.score:.2f} — {mr.reason[:80]}"
                     )
@@ -82,8 +87,7 @@ class ConsoleReporter:
 
         # Header
         lines.append(
-            f"  {'Model':<20} {'Pass Rate':>10} {'Avg Score':>10} "
-            f"{'Latency':>10} {'Cost':>10}"
+            f"  {'Model':<20} {'Pass Rate':>10} {'Avg Score':>10} " f"{'Latency':>10} {'Cost':>10}"
         )
         lines.append("  " + "-" * 62)
 

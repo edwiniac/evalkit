@@ -19,8 +19,8 @@ from evalkit.metrics.llm_judge import (
 )
 from evalkit.models import EvalCase, ModelResponse, Verdict
 
-
 # ── Mock Judge Functions ──────────────────────────────────────────────
+
 
 def make_judge(score: float, reason: str = "Test", **extra):
     """Create a mock judge that returns a fixed score."""
@@ -36,22 +36,26 @@ def make_judge(score: float, reason: str = "Test", **extra):
 def make_failing_judge():
     async def judge(prompt: str) -> str:
         raise RuntimeError("Judge crashed")
+
     return judge
 
 
 def make_bad_json_judge():
     async def judge(prompt: str) -> str:
         return "This is not JSON at all"
+
     return judge
 
 
 def make_markdown_judge(score: float = 0.85):
     async def judge(prompt: str) -> str:
         return f'```json\n{{"score": {score}, "reason": "wrapped in markdown"}}\n```'
+
     return judge
 
 
 # ── Fixtures ──────────────────────────────────────────────────────────
+
 
 def make_case(**kwargs) -> EvalCase:
     defaults = {
@@ -68,6 +72,7 @@ def make_response(text: str = "Python is a programming language") -> ModelRespon
 
 
 # ── Base LLMJudgeMetric ──────────────────────────────────────────────
+
 
 class TestLLMJudgeMetric:
     @pytest.mark.asyncio
@@ -147,6 +152,7 @@ class TestLLMJudgeMetric:
 
 # ── Faithfulness ──────────────────────────────────────────────────────
 
+
 class TestFaithfulness:
     @pytest.mark.asyncio
     async def test_faithful_response(self):
@@ -173,6 +179,7 @@ class TestFaithfulness:
 
 # ── Answer Relevance ──────────────────────────────────────────────────
 
+
 class TestAnswerRelevance:
     @pytest.mark.asyncio
     async def test_relevant_response(self):
@@ -189,6 +196,7 @@ class TestAnswerRelevance:
 
 # ── Hallucination ────────────────────────────────────────────────────
 
+
 class TestHallucination:
     @pytest.mark.asyncio
     async def test_no_hallucination(self):
@@ -199,8 +207,9 @@ class TestHallucination:
     @pytest.mark.asyncio
     async def test_hallucination_detected(self):
         m = Hallucination(
-            judge_fn=make_judge(0.2, "Contains fabricated facts",
-                                hallucinations=["Python was created in 2020"])
+            judge_fn=make_judge(
+                0.2, "Contains fabricated facts", hallucinations=["Python was created in 2020"]
+            )
         )
         r = await m.score(make_case(), make_response("Python was created in 2020"))
         assert r.score == 0.2
@@ -208,6 +217,7 @@ class TestHallucination:
 
 
 # ── Coherence ────────────────────────────────────────────────────────
+
 
 class TestCoherence:
     @pytest.mark.asyncio
@@ -225,6 +235,7 @@ class TestCoherence:
 
 # ── Toxicity ─────────────────────────────────────────────────────────
 
+
 class TestToxicity:
     @pytest.mark.asyncio
     async def test_safe_content(self):
@@ -235,8 +246,7 @@ class TestToxicity:
     @pytest.mark.asyncio
     async def test_toxic_content(self):
         m = Toxicity(
-            judge_fn=make_judge(0.1, "Contains harmful content",
-                                toxic_elements=["profanity"])
+            judge_fn=make_judge(0.1, "Contains harmful content", toxic_elements=["profanity"])
         )
         r = await m.score(make_case(), make_response("bad words"))
         assert r.verdict == Verdict.FAIL
@@ -244,6 +254,7 @@ class TestToxicity:
 
 
 # ── Correctness ──────────────────────────────────────────────────────
+
 
 class TestCorrectness:
     @pytest.mark.asyncio

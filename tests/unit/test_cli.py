@@ -3,7 +3,6 @@ Tests for the CLI.
 """
 
 import json
-from pathlib import Path
 
 import pytest
 from click.testing import CliRunner
@@ -56,9 +55,7 @@ class TestCLIRun:
 
     def test_run_json_output(self, runner, dataset_json, tmp_path):
         output = tmp_path / "result.json"
-        result = runner.invoke(main, [
-            "run", str(dataset_json), "-r", "json", "-o", str(output)
-        ])
+        result = runner.invoke(main, ["run", str(dataset_json), "-r", "json", "-o", str(output)])
         assert result.exit_code == 0
         assert output.exists()
         data = json.loads(output.read_text())
@@ -66,9 +63,7 @@ class TestCLIRun:
 
     def test_run_html_output(self, runner, dataset_json, tmp_path):
         output = tmp_path / "report.html"
-        result = runner.invoke(main, [
-            "run", str(dataset_json), "-r", "html", "-o", str(output)
-        ])
+        result = runner.invoke(main, ["run", str(dataset_json), "-r", "html", "-o", str(output)])
         assert result.exit_code == 0
         assert output.exists()
 

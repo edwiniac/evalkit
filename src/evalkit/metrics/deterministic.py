@@ -16,7 +16,7 @@ from .base import EvalMetric
 class ExactMatch(EvalMetric):
     """
     Checks if the response exactly matches the expected output.
-    
+
     Options:
         case_sensitive: Whether comparison is case-sensitive (default: False).
         strip: Whether to strip whitespace before comparing (default: True).
@@ -51,14 +51,16 @@ class ExactMatch(EvalMetric):
         match = actual == expected
         return self._make_result(
             score=1.0 if match else 0.0,
-            reason="Exact match" if match else f"Expected: '{expected[:100]}', Got: '{actual[:100]}'",
+            reason=(
+                "Exact match" if match else f"Expected: '{expected[:80]}', Got: '{actual[:80]}'"
+            ),
         )
 
 
 class ContainsAny(EvalMetric):
     """
     Checks if the response contains any of the specified keywords.
-    
+
     Score = proportion of keywords found (0 to 1).
     """
 
@@ -92,8 +94,11 @@ class ContainsAny(EvalMetric):
         score = len(found) / len(keywords)
         return self._make_result(
             score=score,
-            reason=f"Found {len(found)}/{len(keywords)}: {found}" if found
-                   else f"None of {keywords} found in response",
+            reason=(
+                f"Found {len(found)}/{len(keywords)}: {found}"
+                if found
+                else f"None of {keywords} found in response"
+            ),
             found=found,
             missing=[k for k in keywords if k not in found],
         )
@@ -102,7 +107,7 @@ class ContainsAny(EvalMetric):
 class ContainsAll(EvalMetric):
     """
     Checks if the response contains ALL of the specified keywords.
-    
+
     Score = 1.0 if all present, else proportion found.
     """
 
@@ -136,7 +141,7 @@ class ContainsAll(EvalMetric):
         return self._make_result(
             score=score,
             reason=f"Found {len(found)}/{len(keywords)}"
-                   + (f", missing: {missing}" if missing else ""),
+            + (f", missing: {missing}" if missing else ""),
             found=found,
             missing=missing,
         )
@@ -145,7 +150,7 @@ class ContainsAll(EvalMetric):
 class RegexMatch(EvalMetric):
     """
     Checks if the response matches a regex pattern.
-    
+
     Score = 1.0 if pattern found, else 0.0.
     """
 
@@ -181,7 +186,7 @@ class RegexMatch(EvalMetric):
 class IsJSON(EvalMetric):
     """
     Checks if the response is valid JSON.
-    
+
     Optionally checks for required keys.
     """
 
@@ -231,7 +236,7 @@ class IsJSON(EvalMetric):
         return self._make_result(
             score=score,
             reason=f"JSON keys: {len(found)}/{len(self._required_keys)}"
-                   + (f", missing: {missing}" if missing else ""),
+            + (f", missing: {missing}" if missing else ""),
             found_keys=found,
             missing_keys=missing,
         )
@@ -240,7 +245,7 @@ class IsJSON(EvalMetric):
 class LengthRange(EvalMetric):
     """
     Checks if the response length is within a specified range.
-    
+
     Score = 1.0 if within range, degrades linearly outside.
     """
 

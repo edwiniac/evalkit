@@ -76,4 +76,10 @@ target-version = ['py310']
 
 [tool.ruff]
 line-length = 100
+
+[tool.ruff.lint]
 select = ["E", "F", "W", "I", "N"]
+
+[tool.ruff.lint.per-file-ignores]
+"src/evalkit/metrics/judge_prompts.py" = ["E501"]
+"src/evalkit/reporters/html_reporter.py" = ["E501"]

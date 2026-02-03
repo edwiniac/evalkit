@@ -13,7 +13,7 @@ from ..models import EvalCase, MetricResult, ModelResponse, Verdict
 class EvalMetric(ABC):
     """
     Abstract base class for evaluation metrics.
-    
+
     Subclasses implement `score()` to evaluate a model response
     against a test case. Return a MetricResult with a 0-1 score.
     """
@@ -42,11 +42,11 @@ class EvalMetric(ABC):
     ) -> MetricResult:
         """
         Evaluate a model response for a given case.
-        
+
         Args:
             case: The evaluation test case.
             response: The model's response.
-            
+
         Returns:
             MetricResult with score, verdict, and reason.
         """

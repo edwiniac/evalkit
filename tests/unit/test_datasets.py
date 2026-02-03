@@ -14,10 +14,9 @@ from evalkit.datasets.loader import (
     load_suite,
 )
 from evalkit.metrics.deterministic import ExactMatch
-from evalkit.models import EvalCase
-
 
 # ── JSON Loading ─────────────────────────────────────────────────────
+
 
 class TestLoadJSON:
     def test_load_json_list(self, tmp_path):
@@ -69,6 +68,7 @@ class TestLoadJSON:
 
 # ── JSONL Loading ────────────────────────────────────────────────────
 
+
 class TestLoadJSONL:
     def test_load_jsonl(self, tmp_path):
         lines = [
@@ -95,6 +95,7 @@ class TestLoadJSONL:
 
 
 # ── CSV Loading ──────────────────────────────────────────────────────
+
 
 class TestLoadCSV:
     def test_load_csv(self, tmp_path):
@@ -126,6 +127,7 @@ class TestLoadCSV:
 
 # ── Auto-detect Format ───────────────────────────────────────────────
 
+
 class TestLoadCases:
     def test_auto_json(self, tmp_path):
         path = tmp_path / "data.json"
@@ -154,13 +156,18 @@ class TestLoadCases:
 
 # ── Suite Loading ────────────────────────────────────────────────────
 
+
 class TestLoadSuite:
     def test_load_suite(self, tmp_path):
         path = tmp_path / "my_suite.json"
-        path.write_text(json.dumps([
-            {"input": "Q1", "expected_output": "A1"},
-            {"input": "Q2", "expected_output": "A2"},
-        ]))
+        path.write_text(
+            json.dumps(
+                [
+                    {"input": "Q1", "expected_output": "A1"},
+                    {"input": "Q2", "expected_output": "A2"},
+                ]
+            )
+        )
         suite = load_suite(path)
         assert suite.name == "my_suite"
         assert len(suite) == 2

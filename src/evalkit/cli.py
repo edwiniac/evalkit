@@ -11,11 +11,9 @@ import json
 import logging
 import sys
 from pathlib import Path
-from typing import Optional
 
 import click
 
-from .adapters import static_model
 from .datasets.loader import load_cases
 from .metrics.deterministic import (
     ContainsAll,
@@ -71,7 +69,12 @@ def main():
 
 @main.command()
 @click.argument("dataset", type=click.Path(exists=True))
-@click.option("--metrics", "-m", default="exact", help="Comma-separated metrics (exact,contains,bleu,rouge,json,length,latency,cost)")
+@click.option(
+    "--metrics",
+    "-m",
+    default="exact",
+    help="Comma-separated metrics (exact,contains,bleu,rouge,json,length,latency,cost)",
+)
 @click.option("--name", "-n", default=None, help="Suite name")
 @click.option("--report", "-r", default="console", help="Report format: console, json, html")
 @click.option("--output", "-o", default=None, help="Output file path")
@@ -113,6 +116,7 @@ def run(dataset, metrics, name, report, output, verbose, concurrency):
             click.echo(reporter.to_json(result))
     elif report == "html":
         from .reporters.html_reporter import HTMLReporter
+
         reporter = HTMLReporter()
         out_path = Path(output or f"evalkit_report_{result.run_id}.html")
         reporter.save(result, out_path)
@@ -142,7 +146,7 @@ def report(result_file, fmt, output, verbose):
     """Generate a report from a saved JSON result."""
     data = json.loads(Path(result_file).read_text())
 
-    from .models import EvalSuiteResult, CaseResult, EvalCase, ModelResponse, MetricResult, Verdict
+    from .models import CaseResult, EvalSuiteResult, MetricResult, ModelResponse, Verdict
 
     # Reconstruct result from JSON
     case_results = []
@@ -172,6 +176,7 @@ def report(result_file, fmt, output, verbose):
         ConsoleReporter(verbose=verbose).print(result)
     elif fmt == "html":
         from .reporters.html_reporter import HTMLReporter
+
         out_path = Path(output or f"evalkit_report_{result.run_id}.html")
         HTMLReporter().save(result, out_path)
         click.echo(f"HTML report saved to {out_path}")
